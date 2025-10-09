@@ -1,14 +1,16 @@
 // server.js
-import express from "express";
-import axios from "axios";
-import cors from "cors";
+import express from "express";  // Used to create server
+import axios from "axios";      // Used to 
+import cors from "cors";        // Used to access endpoints across different origins?
 
-const app = express();
-app.use(cors());
+const app = express();  // Create the server
+app.use(cors());        // Enable cross origin
 
-async function solvedToday(username) {
-  const url = "https://leetcode.com/graphql";
-  const query = `
+async function solvedToday(username) {  // Create a function with async tag that allows the use of await 
+  const url = "https://leetcode.com/graphql";   // Define the url to be visited
+  // The query to be used by the graphql api
+  // Gets recent submissions by $username and their status (accepted or failed), and their timestamp
+  const query = `       
     query recentSubmissions($username: String!) {
       recentSubmissionList(username: $username) {
         statusDisplay
@@ -18,12 +20,13 @@ async function solvedToday(username) {
   `;
 
   try {
-    const response = await axios.post(url, {
-      query,
-      variables: { username },
+    const response = await axios.post(url, {    // sends a POST request to LeetCode’s GraphQL API. awaits for the apis response before progressing
+      query,                    // Defines a query which is the query we made above
+      variables: { username },  // List of variables, this replaces $username with an actual username
     });
 
-    const list = response.data?.data?.recentSubmissionList || [];
+    // Stores the status and timestamp of recent submissions if there are any, otherwise initializes to empty list                                                      
+    const list = response.data?.data?.recentSubmissionList || [];   
     const today = new Date();
     const todayUTC = new Date(
       Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
