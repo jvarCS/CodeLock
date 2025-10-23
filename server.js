@@ -48,14 +48,6 @@ async function solvedToday(username) {  // Create a function with async tag that
   }
 }
 
-app.get("/", (req, res) => {
-  res.send(`
-    <h1>CodeLock Backend</>
-    <p>Welcome to CodeLock! The leetcode consistancy enforcer</p>
-    <pre>/check?user=your_leetcode_username</pre>
-    `);
-});
-
 app.get("/check", async (req, res) => { // Defines a route at /check
   const user = req.query.user;
   if (!user) return res.status(400).json({ error: "Missing ?user=" });
