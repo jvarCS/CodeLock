@@ -27,13 +27,13 @@ async function solvedToday(username) {  // Create a function with async tag that
 
     // Stores the status and timestamp of recent submissions if there are any, otherwise initializes to empty list                                                      
     const list = response.data?.data?.recentSubmissionList || [];   
-    const today = new Date();
+    const today = new Date(); // Makes new date
     const todayUTC = new Date(
       Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
     );
 
-    for (const sub of list) {
-      if (sub.statusDisplay === "Accepted") {
+    for (const sub of list) { // For submissions previously retrieved
+      if (sub.statusDisplay === "Accepted") { // If the submission was accepted
         const t = new Date(sub.timestamp * 1000);
         const tUTC = new Date(
           Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate())
@@ -41,14 +41,22 @@ async function solvedToday(username) {  // Create a function with async tag that
         if (tUTC.getTime() === todayUTC.getTime()) return true;
       }
     }
-    return false;
+    return false; // Returns false if list is empty or if after going through all submissions, there is no accepted submission
   } catch (err) {
     console.error("LeetCode API error:", err.message);
     return false;
   }
 }
 
-app.get("/check", async (req, res) => {
+app.get("/", (req, res) => {
+  res.send(`
+    <h1>CodeLock Backend</>
+    <p>Welcome to CodeLock! The leetcode consistancy enforcer</p>
+    <pre>/check?user=your_leetcode_username</pre>
+    `);
+});
+
+app.get("/check", async (req, res) => { // Defines a route at /check
   const user = req.query.user;
   if (!user) return res.status(400).json({ error: "Missing ?user=" });
 
